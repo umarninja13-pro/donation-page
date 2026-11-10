@@ -40,23 +40,7 @@
         .app-container {
             width: 100%;
             max-width: 480px; /* Mobile size */
-            padding: 20px;
-            padding-bottom: 50px;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .header i {
-            margin-right: 15px;
-            cursor: pointer;
-            font-size: 20px;
+            padding: 40px 20px 50px 20px; /* Added top padding since header is removed */
         }
 
         /* Hero Section */
@@ -335,12 +319,6 @@
 <body>
 
     <div class="app-container">
-        <!-- Header -->
-        <div class="header">
-            <i class="fas fa-arrow-left"></i>
-            Donation
-        </div>
-
         <!-- Hero Section -->
         <div class="hero">
             <h1><i class="fas fa-heart"></i> Support the Developer</h1>
