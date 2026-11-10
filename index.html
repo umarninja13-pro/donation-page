@@ -376,7 +376,6 @@
             <div class="details-section">
                 <div class="detail-group">
                     <div class="detail-label">Account Holder</div>
-                    <!-- APNA NAAM YAHAN LIKHEIN -->
                     <div class="detail-value" id="bank-name">Umar Khatab</div> 
                 </div>
                 <div class="detail-group">
@@ -385,7 +384,6 @@
                 </div>
                 <div class="detail-group">
                     <div class="detail-label">IBAN</div>
-                    <!-- APNA IBAN YAHAN LIKHEIN -->
                     <div class="detail-value" id="bank-iban">PK15UNIL0109000383945822</div>
                 </div>
             </div>
@@ -431,7 +429,6 @@
                 </div>
                 <div class="detail-group">
                     <div class="detail-label">Wallet Address</div>
-                    <!-- APNA CRYPTO WALLET ADDRESS YAHAN LIKHEIN -->
                     <div class="detail-value" id="crypto-address">0xA07caD37068F20168285D9b332B502e73b629e18</div>
                 </div>
             </div>
@@ -476,11 +473,9 @@
     <script>
         // Tab Switching Logic
         function switchTab(tab) {
-            // Remove active class from all tabs & contents
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-            // Add active class to clicked tab & corresponding content
             if(tab === 'bank') {
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.getElementById('bank-content').classList.add('active');
@@ -498,7 +493,6 @@
                 showToast(message);
             }).catch(err => {
                 console.error('Failed to copy: ', err);
-                // Fallback for older browsers
                 const textArea = document.createElement("textarea");
                 textArea.value = textToCopy;
                 document.body.appendChild(textArea);
@@ -529,7 +523,7 @@
                     url: window.location.href,
                 }).catch(console.error);
             } else {
-                copyText('bank-iban', 'Link copied to clipboard!'); // Fallback
+                copyText('bank-iban', 'Link copied to clipboard!'); 
             }
         }
 
@@ -552,4 +546,4 @@
         }
     </script>
 </body>
-  </html>
+</html>
