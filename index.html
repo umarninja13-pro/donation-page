@@ -1,527 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support the Developer</title>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #000000;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a5;
-            --card-bg: #1c1c1e;
-            --tab-bg: #2c2c2e;
-            --accent-blue: #a9b4c2;
-            --accent-blue-text: #000;
-            --warning-bg: #2a1f1a;
-            --warning-border: #5c3a2a;
-            --warning-text: #f0b7a1;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<title>Support the Developer</title>
+<script>
+/* Set theme before first paint: saved choice, else the phone's setting */
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark')
+    t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,600;8..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#0e1014; --card:#171a20; --card2:#20242c; --text:#eceef3; --muted:#9aa1ae; --line:#2a2f38;
+  --accent:#8ea2ff; --on-accent:#0b1033; --soft:rgba(142,162,255,.14);
+  --warn-bg:#2d1f12; --warn-text:#f5c48d; --glow:rgba(142,162,255,.16);
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset;
+  --spring:cubic-bezier(.34,1.4,.5,1);
+}
+:root[data-theme="light"]{
+  --bg:#f4f5fa; --card:#ffffff; --card2:#eef0f7; --text:#15171c; --muted:#5f6675; --line:#e3e6ef;
+  --accent:#4a5fe0; --on-accent:#ffffff; --soft:rgba(74,95,224,.10);
+  --warn-bg:#fff3e2; --warn-text:#7a4a08; --glow:rgba(74,95,224,.14);
+  --shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{color-scheme:dark}
+html[data-theme="light"]{color-scheme:light}
+body{
+  font-family:'Roboto Flex','Roboto',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:radial-gradient(60% 40% at 50% 0%,var(--glow),transparent 70%);
+  background-repeat:no-repeat;
+  display:flex;justify-content:center;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  transition:background-color .35s,color .35s;
+}
+.app{width:100%;max-width:440px;padding:20px 16px 40px}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+/* top bar */
+.top{display:flex;justify-content:flex-end;height:48px}
+.theme{
+  width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--card);
+  color:var(--text);font-size:17px;cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow);
+  transition:transform .4s var(--spring),background .3s,border-color .3s;
+}
+.theme:active{transform:scale(.88)}
+.theme i{transition:transform .5s var(--spring)}
+.theme.spin i{transform:rotate(360deg)}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
+/* hero */
+.hero{text-align:center;padding:4px 12px 28px}
+.heart{
+  width:60px;height:60px;border-radius:20px;background:var(--soft);color:var(--accent);
+  display:inline-grid;place-items:center;font-size:24px;margin-bottom:18px;
+}
+.heart i{animation:beat 2.6s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}10%{transform:scale(1.18)}22%{transform:scale(1)}}
+.hero h1{font-size:28px;line-height:34px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+.hero p{font-size:15px;line-height:22px;color:var(--muted)}
 
-        .app-container {
-            width: 100%;
-            max-width: 480px; /* Mobile size */
-            padding: 40px 20px 50px 20px; /* Added top padding since header is removed */
-        }
+/* tabs with sliding indicator */
+.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--card2);border-radius:999px;padding:4px;margin-bottom:16px}
+.tabs::before{
+  content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:999px;
+  background:var(--card);box-shadow:var(--shadow);transition:transform .4s var(--spring);
+}
+.tabs[data-active="crypto"]::before{transform:translateX(100%)}
+.tab{
+  position:relative;height:44px;border:0;background:transparent;color:var(--muted);
+  font:500 15px 'Roboto Flex',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;transition:color .25s;
+}
+.tab[aria-selected="true"]{color:var(--text)}
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+/* card */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:28px;padding:20px;
+  box-shadow:var(--shadow);animation:swap .35s ease;
+}
+@keyframes swap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.badge{width:44px;height:44px;border-radius:14px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:18px;flex:none}
+.head h2{font-size:18px;line-height:24px;font-weight:600}
+.head p{font-size:13px;color:var(--muted)}
 
-        .hero h1 {
-            font-size: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+.warn{
+  display:flex;gap:10px;align-items:flex-start;background:var(--warn-bg);color:var(--warn-text);
+  border-radius:16px;padding:12px 14px;font-size:13px;line-height:19px;margin-bottom:16px;
+}
+.warn i{margin-top:2px}
 
-        .hero h1 i {
-            color: #ff4757; /* Heart color */
-        }
+.pills{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.pill{
+  height:34px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);
+  font:500 13px 'Roboto Flex',sans-serif;cursor:pointer;transition:all .25s;
+}
+.pill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 0 10px;
-        }
+.qr-wrap{display:grid;place-items:center}
+.qr{
+  width:min(236px,66vw);aspect-ratio:1;background:#fff;border-radius:24px;overflow:hidden;
+  border:1px solid var(--line);animation:pop .45s var(--spring);
+}
+.qr svg{width:100%;height:100%;display:block}
+.qr-err{padding:24px;color:#333;font-size:13px;display:grid;place-items:center;height:100%;text-align:center}
+@keyframes pop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
+.hint{text-align:center;font-size:13px;line-height:18px;color:var(--muted);margin:12px 8px 18px}
 
-        /* Tabs */
-        .tabs-container {
-            background-color: var(--tab-bg);
-            border-radius: 12px;
-            display: flex;
-            padding: 5px;
-            margin-bottom: 25px;
-        }
+.rows{border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:8px;padding:14px 0;border-bottom:1px solid var(--line)}
+.row .t{flex:1;min-width:0}
+.row .l{font-size:12px;color:var(--muted);margin-bottom:2px}
+.row .v{font-size:15px;line-height:22px;word-break:break-all}
+.copy{
+  width:40px;height:40px;flex:none;border-radius:12px;border:0;background:var(--soft);color:var(--accent);
+  font-size:15px;cursor:pointer;transition:transform .3s var(--spring);
+}
+.copy:active{transform:scale(.85)}
 
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
+.actions{display:flex;gap:10px;margin-top:20px}
+.btn{
+  flex:1;height:50px;border-radius:16px;border:1px solid var(--line);background:transparent;color:var(--text);
+  font:500 15px 'Roboto Flex',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;transition:transform .3s var(--spring);
+}
+.btn.fill{background:var(--accent);border-color:transparent;color:var(--on-accent);flex:1.5}
+.btn:active{transform:scale(.96)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-        .tab-btn.active {
-            background-color: var(--card-bg);
-            color: var(--text-primary);
-        }
+.foot{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
 
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
+.toast{
+  position:fixed;left:16px;right:16px;max-width:408px;margin:0 auto;z-index:100;
+  bottom:calc(24px + env(safe-area-inset-bottom));
+  background:var(--text);color:var(--bg);border-radius:14px;padding:14px 18px;font-size:14px;text-align:center;
+  transform:translateY(140px);opacity:0;transition:transform .4s var(--spring),opacity .3s;
+}
+.toast.show{transform:none;opacity:1}
 
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Card Style */
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .icon-box {
-            background-color: var(--card-bg);
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: var(--text-secondary);
-        }
-
-        .card-header-text h3 {
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .card-header-text p {
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        /* Details Section */
-        .details-section {
-            margin-bottom: 20px;
-        }
-
-        .detail-group {
-            margin-bottom: 15px;
-        }
-
-        .detail-label {
-            color: var(--text-secondary);
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-
-        .detail-value {
-            font-size: 16px;
-            font-weight: 500;
-            word-break: break-all;
-        }
-
-        .badge {
-            display: inline-block;
-            background-color: var(--card-bg);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-        }
-
-        /* Warning Box */
-        .warning-box {
-            background-color: var(--warning-bg);
-            border: 1px solid var(--warning-border);
-            border-radius: 10px;
-            padding: 15px;
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            align-items: flex-start;
-        }
-
-        .warning-box i {
-            color: #ff6b6b;
-            font-size: 18px;
-            margin-top: 2px;
-        }
-
-        .warning-box p {
-            color: var(--warning-text);
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        /* QR Code */
-        .qr-container {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .qr-container p {
-            color: var(--text-secondary);
-            font-size: 13px;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-
-        .qr-image {
-            width: 200px;
-            height: 200px;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 12px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        /* Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 14px;
-            border-radius: 25px;
-            border: 1px solid var(--tab-bg);
-            background-color: transparent;
-            color: var(--text-primary);
-            font-size: 15px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-primary {
-            background-color: var(--accent-blue);
-            color: var(--accent-blue-text);
-            border: none;
-        }
-
-        .btn-icon {
-            flex: 0 0 50px; /* Square button for fullscreen */
-            border-radius: 25px;
-            padding: 14px;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background-color: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        /* Fullscreen QR Modal */
-        .qr-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        
-        .qr-modal.active {
-            display: flex;
-        }
-
-        .qr-modal img {
-            width: 80%;
-            max-width: 350px;
-            border-radius: 12px;
-        }
-
-        .qr-modal .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-        }
-    </style>
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- Hero Section -->
-        <div class="hero">
-            <h1><i class="fas fa-heart"></i> Support the Developer</h1>
-            <p>Thank you for using this app! It is completely free and ad-free. If you find it useful, please consider making a small donation to support its ongoing development.</p>
-        </div>
+<main class="app">
+  <div class="top">
+    <button class="theme" id="theme" aria-label="Switch light or dark mode" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+  </div>
 
-        <!-- Tabs -->
-        <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab('bank')">
-                <i class="fas fa-university"></i> Bank
-            </button>
-            <button class="tab-btn" onclick="switchTab('crypto')">
-                <i class="fas fa-wallet"></i> Crypto
-            </button>
-        </div>
+  <header class="hero">
+    <div class="heart"><i class="fas fa-heart"></i></div>
+    <h1>Support the Developer</h1>
+    <p>This app is free and has no ads. If it helps you, a small donation keeps it going.</p>
+  </header>
 
-        <!-- BANK TAB CONTENT -->
-        <div id="bank-content" class="tab-content active">
-            <div class="card-header">
-                <div class="icon-box"><i class="fas fa-university"></i></div>
-                <div class="card-header-text">
-                    <h3>Bank Transfer (UBL)</h3>
-                    <p>International • IBAN Transfer</p>
-                </div>
-            </div>
+  <div class="tabs" id="tabs" data-active="bank" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" onclick="selectTab('bank')"><i class="fas fa-building-columns"></i> Bank</button>
+    <button class="tab" role="tab" aria-selected="false" onclick="selectTab('crypto')"><i class="fas fa-wallet"></i> Crypto</button>
+  </div>
 
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 15px;">
-                Send a donation directly via IBAN from any bank worldwide.
-            </p>
+  <section id="view" role="tabpanel"></section>
 
-            <div class="badge">International • Accepted Worldwide</div>
+  <p class="foot">Thank you for your support.</p>
+</main>
 
-            <div class="details-section">
-                <div class="detail-group">
-                    <div class="detail-label">Account Holder</div>
-                    <div class="detail-value" id="bank-name">Umar Khatab</div> 
-                </div>
-                <div class="detail-group">
-                    <div class="detail-label">Bank</div>
-                    <div class="detail-value">United Bank Limited (UBL)</div>
-                </div>
-                <div class="detail-group">
-                    <div class="detail-label">IBAN</div>
-                    <div class="detail-value" id="bank-iban">PK15UNIL0109000383945822</div>
-                </div>
-            </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-            <div class="qr-container">
-                <p>Scan this QR to pay</p>
-                <!-- Bank QR Code (Auto-generated based on IBAN) -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PK15UNIL0109000383945822" alt="Bank QR" class="qr-image" id="bank-qr" onclick="openFullscreen('bank')">
-            </div>
+<script>
+/* =============== Your details: edit only this block =============== */
+const CONFIG = {
+  holder:  'Umar Khatab',
+  bank:    'United Bank Limited (UBL)',
+  bankShort: 'United Bank Limited',   // goes inside the Raast QR (max 25 characters)
+  iban:    'PK15UNIL0109000383945822',
+  network: 'USDT (BEP20)',
+  address: '0xA07caD37068F20168285D9b332B502e73b629e18'
+};
+/* ================================================================== */
 
-            <div class="action-buttons">
-                <button class="btn" onclick="sharePage()">
-                    <i class="fas fa-share-alt"></i> Share
-                </button>
-                <button class="btn btn-primary" onclick="copyText('bank-iban', 'IBAN Copied!')">
-                    <i class="fas fa-copy"></i> Copy IBAN
-                </button>
-                <button class="btn btn-icon" onclick="openFullscreen('bank')">
-                    <i class="fas fa-expand"></i>
-                </button>
-            </div>
-        </div>
+/* ---------- Raast P2P QR (SBP standard, scheme 30) ---------- */
+function tlv(id, value) { return id + String(value.length).padStart(2, '0') + value; }
 
-        <!-- CRYPTO TAB CONTENT -->
-        <div id="crypto-content" class="tab-content">
-            <div class="card-header">
-                <div class="icon-box"><i class="fas fa-wallet"></i></div>
-                <div class="card-header-text">
-                    <h3>Crypto Donation</h3>
-                    <p>Fast • Low fees • Worldwide</p>
-                </div>
-            </div>
+function crc16(str) {                       // CRC-16/CCITT-FALSE, as EMVCo requires
+  let crc = 0xFFFF;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= str.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+    crc &= 0xFFFF;
+  }
+  return crc.toString(16).toUpperCase().padStart(4, '0');
+}
 
-            <div class="warning-box">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Only send Tether USD (BEP20) assets to this address. Other assets will be lost forever.</p>
-            </div>
+function raastP2P(iban, fiName) {
+  const body = tlv('00', '02')              // payload format: P2P
+             + tlv('01', '11')              // static QR (payer enters amount)
+             + tlv('02', '30')              // Raast
+             + tlv('03', fiName.slice(0, 25))
+             + tlv('04', iban)
+             + '1004';                      // CRC tag + length, then the checksum
+  return body + crc16(body);
+}
 
-            <div class="details-section">
-                <div class="detail-group">
-                    <div class="detail-label">Network</div>
-                    <div class="detail-value">USDT (BEP20)</div>
-                </div>
-                <div class="detail-group">
-                    <div class="detail-label">Wallet Address</div>
-                    <div class="detail-value" id="crypto-address">0xA07caD37068F20168285D9b332B502e73b629e18</div>
-                </div>
-            </div>
+/* ---------- QR drawing (local, no third-party calls) ---------- */
+function qrSvg(text) {
+  const qr = qrcode(0, 'M');
+  qr.addData(text, 'Byte');
+  qr.make();
+  const n = qr.getModuleCount(), m = 4, t = n + m * 2;
+  let d = '';
+  for (let r = 0; r < n; r++)
+    for (let c = 0; c < n; c++)
+      if (qr.isDark(r, c)) d += 'M' + (c + m) + ' ' + (r + m) + 'h1v1h-1z';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + t + ' ' + t +
+    '" shape-rendering="crispEdges"><rect width="' + t + '" height="' + t +
+    '" fill="#fff"/><path d="' + d + '" fill="#000"/></svg>';
+}
+function safeQr(text) {
+  try { return qrSvg(text); }
+  catch (e) { console.error(e); return '<div class="qr-err">QR could not load. Use the copy buttons below.</div>'; }
+}
 
-            <div class="qr-container">
-                <p>Scan this QR to pay</p>
-                <!-- Crypto QR Code (Auto-generated based on Address) -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0xA07caD37068F20168285D9b332B502e73b629e18" alt="Crypto QR" class="qr-image" id="crypto-qr" onclick="openFullscreen('crypto')">
-            </div>
+/* ---------- Content ---------- */
+const OPTIONS = {
+  bank: {
+    icon: 'fa-building-columns', title: 'Bank transfer', sub: 'UBL, accepted worldwide',
+    modes: {
+      raast: { label: 'Raast QR', data: () => raastP2P(CONFIG.iban, CONFIG.bankShort),
+               hint: 'Scan with JazzCash, Easypaisa or any Pakistani bank app.' },
+      iban:  { label: 'IBAN text', data: () => CONFIG.iban,
+               hint: 'Plain IBAN for a camera or any scanner app.' }
+    },
+    rows: [
+      { l: 'Account holder', v: () => CONFIG.holder },
+      { l: 'Bank', v: () => CONFIG.bank },
+      { l: 'IBAN', v: () => CONFIG.iban, copy: 'IBAN copied' }
+    ],
+    primary: { label: 'Copy IBAN', value: () => CONFIG.iban, toast: 'IBAN copied' }
+  },
+  crypto: {
+    icon: 'fa-wallet', title: 'Crypto donation', sub: 'Fast, low fees, worldwide',
+    modes: { addr: { label: 'Address', data: () => CONFIG.address, hint: 'Scan with your wallet app.' } },
+    warn: 'Send only Tether USD (BEP20) to this address. Other assets will be lost. Check the first 4 and last 4 characters before you send.',
+    rows: [
+      { l: 'Network', v: () => CONFIG.network },
+      { l: 'Wallet address', v: () => CONFIG.address, copy: 'Address copied' }
+    ],
+    primary: { label: 'Copy address', value: () => CONFIG.address, toast: 'Address copied' }
+  }
+};
 
-            <div class="action-buttons">
-                <button class="btn" onclick="sharePage()">
-                    <i class="fas fa-share-alt"></i> Share
-                </button>
-                <button class="btn btn-primary" onclick="copyText('crypto-address', 'Address Copied!')">
-                    <i class="fas fa-copy"></i> Copy Address
-                </button>
-                <button class="btn btn-icon" onclick="openFullscreen('crypto')">
-                    <i class="fas fa-expand"></i>
-                </button>
-            </div>
+const modeByTab = { bank: 'raast', crypto: 'addr' };
+let current = 'bank';
 
-            <div class="warning-box" style="margin-top: 20px;">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Always verify the first 4 and last 4 characters of the address before sending.</p>
-            </div>
-        </div>
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-    </div>
+function render() {
+  const o = OPTIONS[current], keys = Object.keys(o.modes), m = o.modes[modeByTab[current]];
+  document.getElementById('view').innerHTML =
+    '<div class="card">' +
+      '<div class="head"><div class="badge"><i class="fas ' + o.icon + '"></i></div>' +
+        '<div><h2>' + esc(o.title) + '</h2><p>' + esc(o.sub) + '</p></div></div>' +
+      (o.warn ? '<div class="warn"><i class="fas fa-triangle-exclamation"></i><span>' + esc(o.warn) + '</span></div>' : '') +
+      (keys.length > 1 ? '<div class="pills">' + keys.map(k =>
+        '<button class="pill" aria-pressed="' + (k === modeByTab[current]) + '" onclick="setMode(\'' + k + '\')">' + esc(o.modes[k].label) + '</button>').join('') + '</div>' : '') +
+      '<div class="qr-wrap"><div class="qr">' + safeQr(m.data()) + '</div></div>' +
+      '<p class="hint">' + esc(m.hint) + '</p>' +
+      '<div class="rows">' + o.rows.map((r, i) =>
+        '<div class="row"><div class="t"><div class="l">' + esc(r.l) + '</div><div class="v">' + esc(r.v()) + '</div></div>' +
+        (r.copy ? '<button class="copy" aria-label="Copy ' + esc(r.l) + '" onclick="copyValue(' + i + ')"><i class="fas fa-copy"></i></button>' : '') +
+        '</div>').join('') + '</div>' +
+      '<div class="actions">' +
+        '<button class="btn" onclick="sharePage()"><i class="fas fa-share-nodes"></i> Share</button>' +
+        '<button class="btn fill" onclick="copyPrimary()"><i class="fas fa-copy"></i> ' + esc(o.primary.label) + '</button>' +
+      '</div>' +
+    '</div>';
+}
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">Copied!</div>
+function selectTab(t) {
+  if (t === current) return;
+  current = t;
+  document.getElementById('tabs').setAttribute('data-active', t);
+  document.querySelectorAll('.tab').forEach((b, i) => b.setAttribute('aria-selected', (i === 0) === (t === 'bank')));
+  render();
+}
+function setMode(k) { modeByTab[current] = k; render(); }
 
-    <!-- Fullscreen QR Modal -->
-    <div class="qr-modal" id="qr-modal">
-        <i class="fas fa-times close-btn" onclick="closeFullscreen()"></i>
-        <img src="" id="fullscreen-qr-img" alt="QR Fullscreen">
-        <p style="margin-top: 20px; color: #aaa;">Scan with your camera app</p>
-    </div>
+/* ---------- Theme ---------- */
+function syncThemeIcon() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.querySelector('#theme i').className = 'fas ' + (dark ? 'fa-sun' : 'fa-moon');
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#0e1014' : '#f4f5fa');
+}
+function toggleTheme() {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('theme', next); } catch (e) {}
+  const b = document.getElementById('theme');
+  b.classList.remove('spin'); void b.offsetWidth; b.classList.add('spin');
+  syncThemeIcon();
+}
 
-    <!-- JavaScript -->
-    <script>
-        // Tab Switching Logic
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+/* ---------- Copy / share / toast ---------- */
+function copy(text, message) {
+  const fallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); toast(message);
+  };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast(message)).catch(fallback);
+  else fallback();
+}
+function copyValue(i) { const r = OPTIONS[current].rows[i]; copy(r.v(), r.copy); }
+function copyPrimary() { const p = OPTIONS[current].primary; copy(p.value(), p.toast); }
 
-            if(tab === 'bank') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('bank-content').classList.add('active');
-            } else {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('crypto-content').classList.add('active');
-            }
-        }
+let tt;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2400);
+}
+function sharePage() {
+  const url = location.href;
+  if (navigator.share) navigator.share({ title: 'Support the Developer', text: 'Please consider supporting this app.', url }).catch(() => {});
+  else copy(url, 'Link copied');
+}
 
-        // Copy to Clipboard Logic
-        function copyText(elementId, message) {
-            const textToCopy = document.getElementById(elementId).innerText;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast(message);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                const textArea = document.createElement("textarea");
-                textArea.value = textToCopy;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand("copy");
-                document.body.removeChild(textArea);
-                showToast(message);
-            });
-        }
-
-        // Show Toast Message
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.innerText = message;
-            toast.classList.add("show");
-            
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 2500);
-        }
-
-        // Share Page Function
-        function sharePage() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Support the Developer',
-                    text: 'Please consider supporting the development of this app.',
-                    url: window.location.href,
-                }).catch(console.error);
-            } else {
-                copyText('bank-iban', 'Link copied to clipboard!'); 
-            }
-        }
-
-        // Fullscreen QR Logic
-        function openFullscreen(type) {
-            const modal = document.getElementById('qr-modal');
-            const img = document.getElementById('fullscreen-qr-img');
-            
-            if(type === 'bank') {
-                img.src = document.getElementById('bank-qr').src;
-            } else {
-                img.src = document.getElementById('crypto-qr').src;
-            }
-            
-            modal.classList.add('active');
-        }
-
-        function closeFullscreen() {
-            document.getElementById('qr-modal').classList.remove('active');
-        }
-    </script>
+syncThemeIcon();
+render();
+</script>
 </body>
 </html>
